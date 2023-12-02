@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::{self, BufRead};
 
+#[derive(Clone)]
 pub struct Input {
     pub data: Vec<String>,
 }

@@ -16,7 +16,7 @@ pub const NUMERICAL_WORDS: [&str; 9] = [
 #[allow(dead_code)]
 pub fn first() {
     let mut inp = Input::new();
-    inp.read("../res/1.txt").unwrap();
+    inp.read("./res/1.txt").unwrap();
 
     let calibration_values: u32 = inp.data.iter().map(|l| {
         let digits: Vec<u32> = l.chars()
@@ -34,7 +34,7 @@ pub fn first() {
 
 pub fn second() {
     let mut inp = Input::new();
-    inp.read("../res/1.txt").unwrap();
+    inp.read("./res/1.txt").unwrap();
 
     let calibration_values: u32 = inp.data.iter().map(|l| {
         let mut digit_positions = BTreeMap::new();
