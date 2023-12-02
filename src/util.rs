@@ -3,7 +3,7 @@ use std::io::{self, BufRead};
 
 #[derive(Clone)]
 pub struct Input {
-    pub data: Vec<String>,
+    pub lines: Vec<String>,
 }
 
 impl Input {
@@ -14,7 +14,7 @@ impl Input {
 
         reader.lines().for_each(|line| {
             match line {
-                Ok(content) => self.data.push(content),
+                Ok(content) => self.lines.push(content),
                 Err(e) => eprintln!("Error reading line: {}", e),
             }
         });
@@ -24,7 +24,7 @@ impl Input {
 
     pub fn new() -> Self {
         Self {
-            data: vec!()
+            lines: vec!()
         }
     }
 }

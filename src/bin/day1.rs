@@ -13,30 +13,20 @@ pub const NUMERICAL_WORDS: [&str; 9] = [
     "nine",
     ];
 
-#[allow(dead_code)]
-pub fn first() {
-    let mut inp = Input::new();
-    inp.read("./res/1.txt").unwrap();
-
-    let calibration_values: u32 = inp.data.iter().map(|l| {
+pub fn first(inp: &Input) {
+    let calibration_values: u32 = inp.lines.iter().map(|l| {
         let digits: Vec<u32> = l.chars()
             .filter_map(|c| c.to_digit(10))
             .collect();
 
-        match digits.len() {
-            0 => 0, // never the case, but still
-            _ => digits[0] * 10 + digits.last().unwrap(),
-        }
+        digits[0] * 10 + digits.last().unwrap()
     }).sum();
 
     println!("Calibration Value: {}", calibration_values);
 }
 
-pub fn second() {
-    let mut inp = Input::new();
-    inp.read("./res/1.txt").unwrap();
-
-    let calibration_values: u32 = inp.data.iter().map(|l| {
+pub fn second(inp: &Input) {
+    let calibration_values: u32 = inp.lines.iter().map(|l| {
         let mut digit_positions = BTreeMap::new();
 
         NUMERICAL_WORDS.iter().enumerate().for_each(|(i, &digit)| {
@@ -60,7 +50,9 @@ pub fn second() {
 
 
 fn main() {
-    first();
-    second();
+    let mut inp = Input::new();
+    inp.read("./res/1.txt").unwrap();
+    first(&inp);
+    second(&inp);
 }
 
