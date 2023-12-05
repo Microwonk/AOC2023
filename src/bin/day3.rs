@@ -1,59 +1,64 @@
-use core::num;
+use std::collections::HashSet;
 
 use AOC2023::util::*;
 
 fn first(inp: &Input) {
-
-    let mut prev: &str = ".";
-    let mut next: &str = ".";
+    let mut prev = inp.lines.first().unwrap();
+    let mut curr = prev;
+    let mut next = &inp.lines[1];
 
     let mut sum: u32 = 0;
 
-    for (i, line) in inp.lines.iter().enumerate()  {
+    inp.lines.iter().enumerate().for_each(|(i, line)| {
+        curr = line;
+        next = if i + 1 < inp.lines.len() {
+            &inp.lines[i + 1]
+        } else {
+            &inp.lines.last().unwrap()
+        };
 
-        let nums: Vec<u32> = line.split(".").filter_map(|e| {
-            if !e.is_empty() {
-                if let Ok(num) = e.parse::<u32>() {
-                    return Some(num);
-                }
-            }
-            None
-        }).collect();
+        let mut symb_indices: HashSet<usize> = HashSet::new();
 
-        nums.iter().for_each(|num| {
-            println!("{:?}", [prev, line, next]);
-            if i != 0 {
-                if match_lines([prev, line, next], *num, i) {
-                    sum += num;
-                }
-            }
-            
+        [prev, curr, next].iter().for_each(|l| {
+            l.char_indices()
+                .into_iter()
+                .filter(|i| is_symbol(i.1))
+                .for_each(|s| {
+                    symb_indices.insert(s.0);
+                });
         });
 
+        let nums: Vec<_> = line
+            .chars()
+            .filter(|c| !is_symbol(*c))
+            .into_iter()
+            .collect::<String>()
+            .split('.')
+            .filter_map(|n| n.parse::<u32>().ok())
+            .filter(|n_in_line| {
+                symb_indices.iter().any(|s| {
+                    match line.match_indices(&n_in_line.to_string()).next() {
+                        Some(i) => !(*s < (i.0.saturating_sub(1)) || *s > i.0 + i.1.len()),
+                        None => false,
+                    }
+                })
+            })
+            .collect();
+
+        println!("{nums:?}");
+
         prev = line;
-    }
+        sum += nums.iter().sum::<u32>();
+    });
 
-    println!("{}", sum);
+    println!("{sum}")
 }
 
-fn match_lines(inputs: [&str; 3], number: u32, line: usize) -> bool {
-
-    let num_index = inputs[line].match_indices(number.to_string().as_str()).collect::<Vec<_>>()[0];
-
-    if num_index. {
-        
-    }
-
-    inputs.iter().any(|line| {
-        (num_index.0.saturating_sub(1)..(num_index.0 + num_index.1.len() + 1).min(inputs[0].len())).any(|range| {
-            line.chars().collect::<Vec<_>>()[range] != '.'
-        })
-    })
+fn is_symbol(c: char) -> bool {
+    !(c == '.' || c.is_numeric())
 }
 
-fn second(inp: &Input) {
-
-}
+fn second(inp: &Input) {}
 
 fn main() {
     let mut inp = Input::new();
